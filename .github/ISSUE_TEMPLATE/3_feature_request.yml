@@ -1,0 +1,35 @@
+name: "feature request"
+description: "share your ideas for ずつ"
+labels: ["enhancement"]
+body:
+- type: markdown
+  attributes:
+    value: |
+      thanks for sharing your idea to make ずつ better〜
+
+- type: textarea
+  attributes:
+    label: "what's your idea?"
+    description: "tell us about the feature you'd like to see!"
+    placeholder: "example: it would be great if we could have different sound notifications for breaks vs. task completion"
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: "why would this be helpful?"
+    description: "how would this feature make ずつ more useful for you?"
+    placeholder: |
+      example: this would help me better distinguish between different types of transitions
+      in my workflow without having to look at the screen!
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: "any specific details?"
+    description: "optional: share any other thoughts or suggestions about how this feature could work"
+    placeholder: |
+      example: maybe we could choose from a few different sounds, or upload our own notification sounds
+  validations:
+    required: false

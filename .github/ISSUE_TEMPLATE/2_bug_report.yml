@@ -1,0 +1,44 @@
+name: "report a bug"
+description: "help make ずつ better by reporting an issue"
+labels: ["bug"]
+body:
+- type: textarea
+  attributes:
+      label: "what's happening?"
+      description: "tell us what's not working right."
+      placeholder: "example: the timer isn't working correctly, or tasks aren't saving properly."
+  validations:
+      required: true
+
+- type: textarea
+  attributes:
+      label: "how can we see it too?"
+      description: "what steps should we follow to see the same issue?"
+      placeholder: |
+          1. open ずつ
+          2. add a task...
+          3. then...
+  validations:
+      required: true
+
+- type: dropdown
+  attributes:
+      label: "where are you using ずつ?"
+      options:
+          - "on my phone"
+          - "on my computer"
+  validations:
+      required: true
+
+- type: input
+  attributes:
+      label: "which browser are you using?"
+      placeholder: "example: chrome, safari, firefox"
+  validations:
+      required: true
+
+- type: textarea
+  attributes:
+      label: "anything else we should know?"
+      description: "optional: add any other helpful details"
+      required: false
