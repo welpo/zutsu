@@ -30,22 +30,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeDOM() {
-  taskInput = document.getElementById("taskNameInput");
-  durationInput = document.getElementById("taskDurationInput");
   addTaskButton = document.getElementById("addTaskButton");
-  importButton = document.getElementById("importButton");
-  exportButton = document.getElementById("exportButton");
-  startButton = document.getElementById("startSessionButton");
-  timerDisplay = document.getElementById("timerDisplay");
-  currentTaskName = document.getElementById("currentTaskName");
-  pauseButton = document.getElementById("pauseButton");
-  skipButton = document.getElementById("skipButton");
-  taskList = document.getElementById("taskList");
-  progressFill = document.getElementById("progressFill");
   completedTasksList = document.getElementById("completedTasksList");
-  resetButton = document.getElementById("resetButton");
   currentTaskContainer = document.getElementById("currentTaskContainer");
+  currentTaskName = document.getElementById("currentTaskName");
+  durationInput = document.getElementById("taskDurationInput");
+  exportButton = document.getElementById("exportButton");
+  importButton = document.getElementById("importButton");
   importExportcontrols = document.getElementById("importExportControls");
+  pauseButton = document.getElementById("pauseButton");
+  progressFill = document.getElementById("progressFill");
+  resetButton = document.getElementById("resetButton");
+  skipButton = document.getElementById("skipButton");
+  startButton = document.getElementById("startSessionButton");
+  taskInput = document.getElementById("taskNameInput");
+  taskList = document.getElementById("taskList");
+  taskPlaceholder = document.getElementById("taskPlaceholder");
+  timerDisplay = document.getElementById("timerDisplay");
   durationInput.value = DEFAULT_DURATION;
 }
 
@@ -57,7 +58,7 @@ function loadTasks() {
     state.completedTasks = data.completedTasks || [];
   }
   renderTasks();
-  updateButtonStates();
+  updateUIStates();
 }
 
 function renderTasks() {
@@ -114,7 +115,7 @@ function renderTasks() {
       state.tasks.splice(index, 1);
       saveTasks();
       renderTasks();
-      updateButtonStates();
+      updateUIStates();
     });
 
     taskList.appendChild(li);
@@ -131,18 +132,20 @@ function saveTasks() {
   );
 }
 
-function updateButtonStates() {
-  const noPendingTasks = state.tasks.length === 0;
-  const noActiveTask = !state.isActive || !state.currentTask;
-  const noTaskCompleted = state.completedTasks.length === 0;
+function updateUIStates() {
   const hasCompletedTasks = state.completedTasks.length > 0;
+  const noActiveTask = !state.isActive || !state.currentTask;
+  const noPendingTasks = state.tasks.length === 0;
+  const noTaskCompleted = state.completedTasks.length === 0;
   const noTasks = noPendingTasks && noTaskCompleted;
+  taskPlaceholder.style.display = noTasks ? "block" : "none";
   exportButton.disabled = noTasks;
-  startButton.disabled = noPendingTasks;
-  skipButton.disabled = noActiveTask;
   importExportcontrols.style.display = noActiveTask ? "flex" : "none";
-  startSessionButton.style.display = noActiveTask ? "block" : "none";
+  pauseButton.disabled = noActiveTask;
   resetButton.style.display = hasCompletedTasks ? "inline-flex" : "none";
+  skipButton.disabled = noActiveTask;
+  startButton.disabled = noPendingTasks;
+  startSessionButton.style.display = noActiveTask ? "block" : "none";
 }
 
 function initializeDragAndDrop() {
@@ -289,7 +292,7 @@ function addTask() {
   saveTasks();
   renderTasks();
   clearInputs();
-  updateButtonStates();
+  updateUIStates();
 }
 
 function clearInputs() {
@@ -313,7 +316,7 @@ function importTasks() {
           state.completedTasks = data.completedTasks || [];
           saveTasks();
           renderTasks();
-          updateButtonStates();
+          updateUIStates();
         }
       } catch (error) {
         console.error("Failed to import tasks:", error);
@@ -371,7 +374,7 @@ function startTimer() {
     updateProgress();
 
     if (state.timeRemaining <= 0) {
-      playNotification();
+      playAudioNotification();
       nextTask();
     }
   }, 1000);
@@ -393,7 +396,9 @@ function nextTask() {
     // Set new current task
     state.currentTask = state.tasks[0];
     state.timeRemaining = state.currentTask.duration * 60;
-    playNotification();
+    if (state.timeRemaining <= 0) {
+      playAudioNotification();
+    }
     showNotification(
       `next up: ${state.currentTask.name} (${state.currentTask.duration} min)`
     );
@@ -428,7 +433,7 @@ function updateUI() {
     currentTaskName.textContent = state.currentTask.name;
   }
   renderTasks();
-  updateButtonStates();
+  updateUIStates();
 }
 
 function updateTasksFromDOM() {
@@ -472,7 +477,7 @@ function endSession() {
     state.completedTasks.push({ ...finalTask });
   }
   state.tasks = [];
-  playNotification();
+  playAudioNotification();
   const message =
     COMPLETION_MESSAGES[Math.floor(Math.random() * COMPLETION_MESSAGES.length)];
   currentTaskName.innerHTML = message; // Using innerHTML to support ruby tags
@@ -501,7 +506,7 @@ function resetTimerState() {
   progressFill.style.width = "0%";
 }
 
-function playNotification() {
+function playAudioNotification() {
   NOTIFICATION_SOUND.currentTime = 0;
   NOTIFICATION_SOUND.volume = 0.75;
   NOTIFICATION_SOUND.play().catch((error) => {
@@ -542,7 +547,6 @@ const tileUtils = {
       element.classList.remove("animating");
     }, 150);
   },
-
   instantUpdate(element, newValue) {
     element.textContent = newValue;
   },
@@ -552,11 +556,9 @@ const tileUtils = {
 const coinTile = {
   result: document.getElementById("coinResult"),
   button: document.getElementById("coinButton"),
-
   initialize() {
     this.button.addEventListener("click", () => this.flip());
   },
-
   flip() {
     const result = Math.random() < 0.5 ? "heads" : "tails";
     tileUtils.animatedUpdate(this.result, result);
@@ -569,12 +571,10 @@ const randomTile = {
   minInput: document.getElementById("minNumber"),
   maxInput: document.getElementById("maxNumber"),
   button: document.getElementById("numberButton"),
-
   initialize() {
     this.button.addEventListener("click", () => this.roll());
     this.setupValidation();
   },
-
   setupValidation() {
     [this.minInput, this.maxInput].forEach((input) => {
       input.addEventListener("change", () => {
@@ -584,7 +584,6 @@ const randomTile = {
       });
     });
   },
-
   roll() {
     const min = parseInt(this.minInput.value);
     const max = parseInt(this.maxInput.value);
@@ -601,36 +600,30 @@ const counterTile = {
   resetBtn: document.getElementById("resetCounterButton"),
   count: 0,
   storageKey: APP_NAME + "_counter",
-
   initialize() {
     this.loadState();
     this.incrementBtn.addEventListener("click", () => this.increment());
     this.decrementBtn.addEventListener("click", () => this.decrement());
     this.resetBtn.addEventListener("click", () => this.reset());
   },
-
   increment() {
     this.count++;
     this.updateDisplay();
   },
-
   decrement() {
     if (this.count > 0) {
       this.count--;
       this.updateDisplay();
     }
   },
-
   reset() {
     this.count = 0;
     this.updateDisplay();
   },
-
   updateDisplay() {
     tileUtils.instantUpdate(this.result, this.count);
     localStorage.setItem(this.storageKey, this.count.toString());
   },
-
   loadState() {
     const savedCount = localStorage.getItem(this.storageKey);
     if (savedCount !== null) {
@@ -684,7 +677,7 @@ const selectorTile = {
       .map((opt) => opt.trim())
       .filter((opt) => opt);
     if (options.length === 0) {
-      tileUtils.animatedUpdate(this.result, "add options below!");
+      tileUtils.animatedUpdate(this.result, "add options first");
       return;
     }
     const selected = options[Math.floor(Math.random() * options.length)];
@@ -701,6 +694,7 @@ const selectorTile = {
     }
   },
 };
+
 const chronoTile = {
   result: document.getElementById("chronoResult"),
   startButton: document.getElementById("chronoStartButton"),
@@ -708,12 +702,10 @@ const chronoTile = {
   startTime: 0,
   elapsedTime: 0,
   intervalId: null,
-
   initialize() {
     this.startButton.addEventListener("click", () => this.toggleTimer());
     this.resetButton.addEventListener("click", () => this.reset());
   },
-
   toggleTimer() {
     if (this.intervalId) {
       this.pause();
@@ -721,25 +713,21 @@ const chronoTile = {
       this.start();
     }
   },
-
   start() {
     this.startTime = Date.now() - this.elapsedTime;
     this.intervalId = setInterval(() => this.updateDisplay(), 1000);
-    this.startButton.textContent = "⏸";
+    this.startButton.textContent = "⏸︎";
   },
-
   pause() {
     clearInterval(this.intervalId);
     this.intervalId = null;
     this.startButton.textContent = "▶";
   },
-
   reset() {
     this.pause();
     this.elapsedTime = 0;
     tileUtils.instantUpdate(this.result, "00:00");
   },
-
   updateDisplay() {
     this.elapsedTime = Date.now() - this.startTime;
     const seconds = Math.floor(this.elapsedTime / 1000);
@@ -770,7 +758,6 @@ const intervalTile = {
   isWork: true,
   timeLeft: 0,
   wasMainTimerActive: false,
-
   initialize() {
     this.loadState();
     this.startButton.addEventListener("click", () => this.toggleTimer());
@@ -779,7 +766,6 @@ const intervalTile = {
       input.addEventListener("change", () => this.saveState());
     });
   },
-
   toggleTimer() {
     if (this.intervalId) {
       this.pause();
@@ -787,23 +773,19 @@ const intervalTile = {
       this.start();
     }
   },
-
   start() {
     if (!this.timeLeft) {
       this.timeLeft = this.workInput.value * 60;
       this.isWork = true;
     }
-
     this.intervalId = setInterval(() => this.tick(), 1000);
-    this.startButton.textContent = "⏸";
+    this.startButton.textContent = "⏸︎";
   },
-
   pause() {
     clearInterval(this.intervalId);
     this.intervalId = null;
     this.startButton.textContent = "▶";
   },
-
   reset() {
     this.pause();
     this.timeLeft = 0;
@@ -814,7 +796,6 @@ const intervalTile = {
       togglePause();
     }
   },
-
   tick() {
     this.timeLeft--;
     if (this.timeLeft <= 0) {
@@ -822,7 +803,6 @@ const intervalTile = {
     }
     this.updateDisplay();
   },
-
   switchPhase() {
     this.isWork = !this.isWork;
     this.timeLeft = (this.isWork ? this.workInput : this.restInput).value * 60;
@@ -836,10 +816,9 @@ const intervalTile = {
         togglePause();
       }
     }
-    playNotification();
+    playAudioNotification();
     this.updateDisplay();
   },
-
   updateDisplay() {
     const minutes = Math.floor(this.timeLeft / 60);
     const seconds = this.timeLeft % 60;
@@ -849,7 +828,6 @@ const intervalTile = {
     const phase = this.isWork ? "☕" : "🦥";
     tileUtils.instantUpdate(this.result, `${display} ${phase}`);
   },
-
   saveState() {
     localStorage.setItem(
       this.storageKey,
@@ -859,7 +837,6 @@ const intervalTile = {
       })
     );
   },
-
   loadState() {
     const saved = localStorage.getItem(this.storageKey);
     if (saved) {

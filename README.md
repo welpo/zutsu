@@ -21,12 +21,22 @@
 
 i built ずつ to practice through time blocks, with the flexibility of pause/resume. the name comes from 一つずつ (hitotsu-zutsu), meaning "one at a time"
 
+## demo
+
+https://github.com/user-attachments/assets/c9693872-eac8-4370-817d-8a5104f6a035
+
+[try it now〜](https://zutsu.osc.garden)
+
 ## features
 
-- clean, distraction-free interface
-- drag and drop task reordering
-- session history
+- clean, distraction-free interface with dark/light mode
+- private:
+  - no accounts, no tracking
+  - works entirely offline
+  - all data stored locally
 - import/export task lists (json)
+- extra utilities (pomodoro®, coin flip, counter, stopwatch…)
+- browser and sound notifications on completion
 - keyboard shortcuts:
   - <kbd>space</kbd>: pause/resume
   - <kbd>enter</kbd>: add task (when input is focused)

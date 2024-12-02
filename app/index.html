@@ -8,8 +8,8 @@
 
     <!-- Colours -->
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#4c5a3f">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#8a947d">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#4c653b">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#718861">
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -38,7 +38,7 @@
         form-action 'self';
         ">
 
-    <link rel="stylesheet" href="styles.css?h=7d789447">
+    <link rel="stylesheet" href="styles.css?h=f87182b7">
 </head>
 
 <body>
@@ -84,6 +84,7 @@
                         <button id="resetButton">↺ reset</button>
                     </div>
                     <div class="tasks-container">
+                        <div id="taskPlaceholder">add tasks above to get started</div>
                         <ul id="completedTasksList" class="task-list completed">
                             <!-- Completed tasks will be rendered here -->
                         </ul>
@@ -126,16 +127,16 @@
                 </div>
             </div>
 
-            <details open>
+            <details>
                 <summary>show/hide utilities</summary>
                 <div class="tiles-container">
                     <!-- Counter -->
                     <div class="tile">
                         <span class="tile-result" id="counterResult">0</span>
-                        <div class="counter-controls">
-                            <button class="tile-button" id="decrementButton" title="decrease count">−</button>
-                            <button class="tile-button" id="resetCounterButton" title="reset counter">↺</button>
-                            <button class="tile-button" id="incrementButton" title="increase count">+</button>
+                        <div class="tile-controls">
+                            <button class="tile-button icon-button" id="decrementButton" title="decrease count">−</button>
+                            <button class="tile-button icon-button" id="resetCounterButton" title="reset counter">↺</button>
+                            <button class="tile-button icon-button" id="incrementButton" title="increase count">+</button>
                         </div>
                         <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
                             height="48" color="#000000" fill="none">
@@ -225,9 +226,9 @@
                     <!-- Stopwatch -->
                     <div class="tile">
                         <span class="tile-result" id="chronoResult">00:00</span>
-                        <div class="counter-controls">
-                            <button class="tile-button" id="chronoStartButton" title="start/pause stopwatch">▶</button>
-                            <button class="tile-button" id="chronoResetButton" title="reset stopwatch">↺</button>
+                        <div class="tile-controls">
+                            <button class="tile-button icon-button" id="chronoStartButton" title="start/pause stopwatch">▶</button>
+                            <button class="tile-button icon-button" id="chronoResetButton" title="reset stopwatch">↺</button>
                         </div>
                         <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
                             height="48" color="#000000" fill="none">
@@ -255,10 +256,10 @@
                             <input type="number" class="number-input" id="restMinutes" value="5" min="1"
                                 title="rest period in minutes">
                         </div>
-                        <div class="counter-controls">
-                            <button class="tile-button" id="intervalStartButton"
+                        <div class="tile-controls">
+                            <button class="tile-button icon-button" id="intervalStartButton"
                                 title="start/pause interval timer">▶</button>
-                            <button class="tile-button" id="intervalResetButton"
+                            <button class="tile-button icon-button" id="intervalResetButton"
                                 title="reset timer to initial values">↺</button>
                         </div>
                         <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
@@ -341,6 +342,9 @@
                     <li><kbd>enter</kbd>: add task (when editing title or duration)</li>
                 </ul>
 
+                <h3>utility tiles</h3>
+                <p>helpful tools are available below the timer. click on the tile's icon (top left) to learn more</p>
+
                 <h3>tip</h3>
                 <p>add ずつ to your home screen! tap the Share button (iOS) or Install button (Android) to use it like a
                     native app.</p>
@@ -352,7 +356,7 @@
             </div>
         </div>
     </div>
-    <script defer src="app.js?h=0be19192"></script>
+    <script defer src="app.js?h=6221fb54"></script>
 </body>
 
 </html>
