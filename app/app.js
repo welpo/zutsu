@@ -443,6 +443,10 @@ function updateTasksFromDOM() {
 
 function handleKeyboardShortcuts(e) {
   if (!state.isActive) return;
+    // Don't trigger shortcuts if user is typing in a text input
+  if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") {
+    return;
+  }
   switch (e.code) {
     case "Space":
       e.preventDefault();
