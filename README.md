@@ -2,15 +2,15 @@
     <a href="https://zutsu.osc.garden">
         <img src="https://raw.githubusercontent.com/welpo/zutsu/main/app/logo.webp" width="250" alt="zutsu logo">
     </a>
-    <br><br>
+    <br>
     <a href="#contributing">
-        <img src="https://img.shields.io/badge/prs-welcome-0?style=flat-square&labelcolor=202b2d&color=4c5a3f" alt="prs welcome"></a>
+        <img src="https://img.shields.io/badge/prs-welcome-0?style=flat-square&labelcolor=202b2d&color=5b7463" alt="prs welcome"></a>
     <a href="https://zutsu.osc.garden">
         <img src="https://img.shields.io/website?url=https%3a%2f%2fzutsu.osc.garden&style=flat-square&label=app&labelcolor=202b2d" alt="app status"></a>
     <a href="#license">
-        <img src="https://img.shields.io/github/license/welpo/zutsu?style=flat-square&labelcolor=202b2d&color=4c5a3f" alt="license"></a>
+        <img src="https://img.shields.io/github/license/welpo/zutsu?style=flat-square&labelcolor=202b2d&color=5b7463" alt="license"></a>
     <a href="https://github.com/welpo/git-sumi">
-        <img src="https://img.shields.io/badge/clean_commits-git--sumi-0?style=flat-square&labelcolor=202b2d&color=4c5a3f" alt="clean commits"></a>
+        <img src="https://img.shields.io/badge/clean_commits-git--sumi-0?style=flat-square&labelcolor=202b2d&color=5b7463" alt="clean commits"></a>
 </p>
 
 <p align="center">

@@ -394,7 +394,9 @@ function nextTask() {
     state.currentTask = state.tasks[0];
     state.timeRemaining = state.currentTask.duration * 60;
     playNotification();
-    showNotification(`next up: ${state.currentTask.name} (${state.currentTask.duration} min)`);
+    showNotification(
+      `next up: ${state.currentTask.name} (${state.currentTask.duration} min)`
+    );
     updateTimerDisplay();
     updateProgress();
     startTimer();
@@ -481,6 +483,7 @@ function resetSession() {
   state.currentTask = null;
   currentTaskName.textContent = "no task in progress";
   updateUI();
+  saveTasks();
 }
 
 function resetTimerState() {
@@ -523,3 +526,351 @@ window.addEventListener("beforeunload", (e) => {
     return "";
   }
 });
+
+// ================= //
+//   Utility tiles   //
+// ================= //
+const tileUtils = {
+  animatedUpdate(element, newValue) {
+    element.classList.add("animating");
+    setTimeout(() => {
+      element.textContent = newValue;
+      element.classList.remove("animating");
+    }, 150);
+  },
+
+  instantUpdate(element, newValue) {
+    element.textContent = newValue;
+  },
+};
+
+// Coin tile
+const coinTile = {
+  result: document.getElementById("coinResult"),
+  button: document.getElementById("coinButton"),
+
+  initialize() {
+    this.button.addEventListener("click", () => this.flip());
+  },
+
+  flip() {
+    const result = Math.random() < 0.5 ? "heads" : "tails";
+    tileUtils.animatedUpdate(this.result, result);
+  },
+};
+
+// Random number tile
+const randomTile = {
+  result: document.getElementById("numberResult"),
+  minInput: document.getElementById("minNumber"),
+  maxInput: document.getElementById("maxNumber"),
+  button: document.getElementById("numberButton"),
+
+  initialize() {
+    this.button.addEventListener("click", () => this.roll());
+    this.setupValidation();
+  },
+
+  setupValidation() {
+    [this.minInput, this.maxInput].forEach((input) => {
+      input.addEventListener("change", () => {
+        const min = parseInt(this.minInput.value);
+        const max = parseInt(this.maxInput.value);
+        if (min >= max) this.maxInput.value = min + 1;
+      });
+    });
+  },
+
+  roll() {
+    const min = parseInt(this.minInput.value);
+    const max = parseInt(this.maxInput.value);
+    const number = Math.floor(Math.random() * (max - min + 1)) + min;
+    tileUtils.animatedUpdate(this.result, number);
+  },
+};
+
+// Counter tile
+const counterTile = {
+  result: document.getElementById("counterResult"),
+  incrementBtn: document.getElementById("incrementButton"),
+  decrementBtn: document.getElementById("decrementButton"),
+  resetBtn: document.getElementById("resetCounterButton"),
+  count: 0,
+  storageKey: APP_NAME + "_counter",
+
+  initialize() {
+    this.loadState();
+    this.incrementBtn.addEventListener("click", () => this.increment());
+    this.decrementBtn.addEventListener("click", () => this.decrement());
+    this.resetBtn.addEventListener("click", () => this.reset());
+  },
+
+  increment() {
+    this.count++;
+    this.updateDisplay();
+  },
+
+  decrement() {
+    if (this.count > 0) {
+      this.count--;
+      this.updateDisplay();
+    }
+  },
+
+  reset() {
+    this.count = 0;
+    this.updateDisplay();
+  },
+
+  updateDisplay() {
+    tileUtils.instantUpdate(this.result, this.count);
+    localStorage.setItem(this.storageKey, this.count.toString());
+  },
+
+  loadState() {
+    const savedCount = localStorage.getItem(this.storageKey);
+    if (savedCount !== null) {
+      this.count = parseInt(savedCount);
+      this.result.textContent = this.count;
+    }
+  },
+};
+
+const noteTile = {
+  textarea: document.getElementById("noteTileText"),
+  storageKey: APP_NAME + "_note",
+  saveTimeout: null,
+  debounceTime: 1000,
+  initialize() {
+    this.loadNote();
+    this.textarea.addEventListener("input", () => this.debounceSave());
+    // Save when user leaves the textarea
+    this.textarea.addEventListener("blur", () => this.saveNote());
+  },
+  debounceSave() {
+    clearTimeout(this.saveTimeout);
+    this.saveTimeout = setTimeout(() => this.saveNote(), this.debounceTime);
+  },
+  saveNote() {
+    localStorage.setItem(this.storageKey, this.textarea.value);
+  },
+  loadNote() {
+    const savedNote = localStorage.getItem(this.storageKey);
+    if (savedNote) {
+      this.textarea.value = savedNote;
+    }
+  },
+};
+
+const selectorTile = {
+  result: document.getElementById("selectorResult"),
+  input: document.getElementById("selectorInput"),
+  button: document.getElementById("selectorButton"),
+  storageKey: APP_NAME + "_selector",
+  initialize() {
+    this.loadState();
+    this.button.addEventListener("click", () => this.pick());
+    this.input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") this.pick();
+    });
+  },
+  pick() {
+    const options = this.input.value
+      .split(",")
+      .map((opt) => opt.trim())
+      .filter((opt) => opt);
+    if (options.length === 0) {
+      tileUtils.animatedUpdate(this.result, "add options below!");
+      return;
+    }
+    const selected = options[Math.floor(Math.random() * options.length)];
+    tileUtils.animatedUpdate(this.result, selected);
+    this.saveState();
+  },
+  saveState() {
+    localStorage.setItem(this.storageKey, this.input.value);
+  },
+  loadState() {
+    const saved = localStorage.getItem(this.storageKey);
+    if (saved) {
+      this.input.value = saved;
+    }
+  },
+};
+const chronoTile = {
+  result: document.getElementById("chronoResult"),
+  startButton: document.getElementById("chronoStartButton"),
+  resetButton: document.getElementById("chronoResetButton"),
+  startTime: 0,
+  elapsedTime: 0,
+  intervalId: null,
+
+  initialize() {
+    this.startButton.addEventListener("click", () => this.toggleTimer());
+    this.resetButton.addEventListener("click", () => this.reset());
+  },
+
+  toggleTimer() {
+    if (this.intervalId) {
+      this.pause();
+    } else {
+      this.start();
+    }
+  },
+
+  start() {
+    this.startTime = Date.now() - this.elapsedTime;
+    this.intervalId = setInterval(() => this.updateDisplay(), 1000);
+    this.startButton.textContent = "⏸";
+  },
+
+  pause() {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    this.startButton.textContent = "▶";
+  },
+
+  reset() {
+    this.pause();
+    this.elapsedTime = 0;
+    tileUtils.instantUpdate(this.result, "00:00");
+  },
+
+  updateDisplay() {
+    this.elapsedTime = Date.now() - this.startTime;
+    const seconds = Math.floor(this.elapsedTime / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    let display;
+    if (hours > 0) {
+      display = `${hours}:${String(minutes % 60).padStart(2, "0")}:${String(
+        seconds % 60
+      ).padStart(2, "0")}`;
+    } else {
+      display = `${String(minutes).padStart(2, "0")}:${String(
+        seconds % 60
+      ).padStart(2, "0")}`;
+    }
+    tileUtils.instantUpdate(this.result, display);
+  },
+};
+
+const intervalTile = {
+  result: document.getElementById("intervalResult"),
+  startButton: document.getElementById("intervalStartButton"),
+  resetButton: document.getElementById("intervalResetButton"),
+  workInput: document.getElementById("workMinutes"),
+  restInput: document.getElementById("restMinutes"),
+  intervalId: null,
+  storageKey: APP_NAME + "_interval",
+  isWork: true,
+  timeLeft: 0,
+  wasMainTimerActive: false,
+
+  initialize() {
+    this.loadState();
+    this.startButton.addEventListener("click", () => this.toggleTimer());
+    this.resetButton.addEventListener("click", () => this.reset());
+    [this.workInput, this.restInput].forEach((input) => {
+      input.addEventListener("change", () => this.saveState());
+    });
+  },
+
+  toggleTimer() {
+    if (this.intervalId) {
+      this.pause();
+    } else {
+      this.start();
+    }
+  },
+
+  start() {
+    if (!this.timeLeft) {
+      this.timeLeft = this.workInput.value * 60;
+      this.isWork = true;
+    }
+
+    this.intervalId = setInterval(() => this.tick(), 1000);
+    this.startButton.textContent = "⏸";
+  },
+
+  pause() {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    this.startButton.textContent = "▶";
+  },
+
+  reset() {
+    this.pause();
+    this.timeLeft = 0;
+    this.isWork = true;
+    this.wasMainTimerActive = false;
+    tileUtils.instantUpdate(this.result, "00:00");
+    if (!this.isWork && this.wasMainTimerActive && state.isPaused) {
+      togglePause();
+    }
+  },
+
+  tick() {
+    this.timeLeft--;
+    if (this.timeLeft <= 0) {
+      this.switchPhase();
+    }
+    this.updateDisplay();
+  },
+
+  switchPhase() {
+    this.isWork = !this.isWork;
+    this.timeLeft = (this.isWork ? this.workInput : this.restInput).value * 60;
+    if (this.isWork) {
+      if (this.wasMainTimerActive && state.isPaused) {
+        togglePause();
+      }
+    } else {
+      this.wasMainTimerActive = state.isActive && !state.isPaused;
+      if (this.wasMainTimerActive) {
+        togglePause();
+      }
+    }
+    playNotification();
+    this.updateDisplay();
+  },
+
+  updateDisplay() {
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft % 60;
+    const display = `${String(minutes).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
+    const phase = this.isWork ? "☕" : "🦥";
+    tileUtils.instantUpdate(this.result, `${display} ${phase}`);
+  },
+
+  saveState() {
+    localStorage.setItem(
+      this.storageKey,
+      JSON.stringify({
+        work: this.workInput.value,
+        rest: this.restInput.value,
+      })
+    );
+  },
+
+  loadState() {
+    const saved = localStorage.getItem(this.storageKey);
+    if (saved) {
+      const { work, rest } = JSON.parse(saved);
+      this.workInput.value = work;
+      this.restInput.value = rest;
+    }
+  },
+};
+
+[
+  coinTile,
+  randomTile,
+  counterTile,
+  selectorTile,
+  intervalTile,
+  chronoTile,
+].forEach((tile) => tile.initialize());
