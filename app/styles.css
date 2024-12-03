@@ -494,7 +494,7 @@ kbd {
     vertical-align: middle;
     transition: color 0.2s ease;
     margin-left: var(--spacing-xs);
-    aspect-ratio: 1/1;
+    aspect-ratio: 1;
     width: 24px;
     color: var(--text-light);
 }
@@ -614,14 +614,14 @@ summary {
     display: flex;
     position: relative;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--surface);
     padding: var(--spacing-md);
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     width: 100%;
 }
 
@@ -629,9 +629,8 @@ summary {
     position: absolute;
     top: var(--spacing-sm);
     left: var(--spacing-sm);
-    cursor: help;
     padding: 0;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1;
     width: 20px;
     height: 20px;
     color: var(--text-light);
@@ -645,7 +644,7 @@ summary {
     min-width: 0;
 }
 
-.tile-docs {
+.popup {
     position: absolute;
     top: 0;
     left: 50%;
@@ -659,7 +658,7 @@ summary {
     background: var(--surface);
     padding: var(--spacing-xs) var(--spacing-sm);
     width: max-content;
-    max-width: 200px;
+    max-width: 205px;
     color: var(--text);
     font-size: 0.9rem;
     text-align: center;
@@ -708,7 +707,7 @@ summary {
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1;
 }
 
 /* Number tile specifics */
@@ -744,7 +743,7 @@ summary {
     border: none;
     background: none;
     padding: var(--spacing-sm);
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     width: 100%;
     resize: none;
     color: var(--text);
@@ -775,7 +774,7 @@ summary {
     font-size: 1rem;
 }
 
-/* Not pomodoro */
+/* Not Pomodoro */
 .interval-inputs {
     display: flex;
     align-items: center;
@@ -785,6 +784,56 @@ summary {
 
 .interval-inputs span {
     color: var(--text-light);
+}
+
+/* Activity calendar */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    margin: auto;
+    margin-top: 1.2rem;
+    width: 100%;
+
+    .calendar-day-container {
+        position: relative;
+
+        .calendar-day {
+            border-radius: var(--radius-sm);
+            background: var(--background);
+            aspect-ratio: 1;
+
+            &.activity-empty {
+                opacity: 0.1;
+                background: var(--text);
+            }
+
+            &.activity-q1 {
+                opacity: 0.25;
+                background: var(--primary);
+            }
+
+            &.activity-q2 {
+                opacity: 0.5;
+                background: var(--primary);
+            }
+
+            &.activity-q3 {
+                opacity: 0.75;
+                background: var(--primary);
+            }
+
+            &.activity-q4 {
+                opacity: 1;
+                background: var(--primary);
+            }
+
+            &:hover + .calendar-popup {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+    }
 }
 
 /* GitHub corner */

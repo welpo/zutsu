@@ -41,7 +41,7 @@ function initializeDOM() {
   pauseButton = document.getElementById("pauseButton");
   progressFill = document.getElementById("progressFill");
   resetButton = document.getElementById("resetButton");
-  skipButton = document.getElementById("skipButton");
+  doneButton = document.getElementById("doneButton");
   startButton = document.getElementById("startSessionButton");
   taskInput = document.getElementById("taskNameInput");
   taskList = document.getElementById("taskList");
@@ -143,7 +143,7 @@ function updateUIStates() {
   importExportcontrols.style.display = noActiveTask ? "flex" : "none";
   pauseButton.disabled = noActiveTask;
   resetButton.style.display = hasCompletedTasks ? "inline-flex" : "none";
-  skipButton.disabled = noActiveTask;
+  doneButton.disabled = noActiveTask;
   startButton.disabled = noPendingTasks;
   startSessionButton.style.display = noActiveTask ? "block" : "none";
 }
@@ -212,7 +212,7 @@ function initializeEventListeners() {
 
   // Timer Controls
   pauseButton.addEventListener("click", togglePause);
-  skipButton.addEventListener("click", nextTask);
+  doneButton.addEventListener("click", nextTask);
 
   // Drag and Drop
   initializeDragAndDrop();
@@ -397,11 +397,13 @@ function nextTask() {
     state.currentTask = state.tasks[0];
     state.timeRemaining = state.currentTask.duration * 60;
     if (state.timeRemaining <= 0) {
+      // Only play sound if completed naturally (i.e. used didn't click 'done')
       playAudioNotification();
     }
     showNotification(
       `next up: ${state.currentTask.name} (${state.currentTask.duration} min)`
     );
+    calendarTile.addActivity();
     updateTimerDisplay();
     updateProgress();
     startTimer();
@@ -448,7 +450,7 @@ function updateTasksFromDOM() {
 
 function handleKeyboardShortcuts(e) {
   if (!state.isActive) return;
-    // Don't trigger shortcuts if user is typing in a text input
+  // Don't trigger shortcuts if user is typing in a text input
   if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") {
     return;
   }
@@ -475,6 +477,7 @@ function endSession() {
   clearInterval(state.timer);
   if (finalTask) {
     state.completedTasks.push({ ...finalTask });
+    calendarTile.addActivity();
   }
   state.tasks = [];
   playAudioNotification();
@@ -847,6 +850,77 @@ const intervalTile = {
   },
 };
 
+const calendarTile = {
+  grid: document.getElementById("calendarGrid"),
+  storageKey: APP_NAME + "_activity",
+  initialize() {
+    this.cleanupOldData();
+    this.renderCalendar();
+  },
+  cleanupOldData() {
+    const activity = JSON.parse(localStorage.getItem(this.storageKey) || "{}");
+    const dates = Object.keys(activity);
+    // If no data or less than 30 days of data, no cleanup needed
+    if (dates.length === 0 || dates.length <= 30) return;
+    // Get date 30 days ago
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const cleanedActivity = Object.entries(activity).reduce(
+      (acc, [date, count]) => {
+        if (new Date(date) >= thirtyDaysAgo) {
+          acc[date] = count;
+        }
+        return acc;
+      },
+      {}
+    );
+    localStorage.setItem(this.storageKey, JSON.stringify(cleanedActivity));
+  },
+  renderCalendar() {
+    const activity = JSON.parse(localStorage.getItem(this.storageKey) || "{}");
+    this.grid.innerHTML = "";
+    const counts = Object.values(activity);
+    const maxCount = counts.length ? Math.max(...counts) : 0;
+    for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split("T")[0];
+        const count = activity[dateStr] || 0;
+        // Create container for day and its popup
+        const dayContainer = document.createElement("div");
+        dayContainer.className = "calendar-day-container";
+        // Create day
+        const day = document.createElement("div");
+        const level = this.getIntensityLevel(count, maxCount);
+        day.className = `calendar-day activity-${level}`;
+        // Create popup
+        const popup = document.createElement("div");
+        popup.className = "popup calendar-popup";
+        popup.textContent = `${dateStr}: ${count} tasks`;
+        dayContainer.appendChild(day);
+        dayContainer.appendChild(popup);
+        this.grid.appendChild(dayContainer);
+    }
+},
+  getIntensityLevel(count, maxCount) {
+    if (count === 0) return "empty";
+    // Create quartiles
+    const quartile = maxCount / 4;
+    if (count <= quartile) return "q1";
+    if (count <= quartile * 2) return "q2";
+    if (count <= quartile * 3) return "q3";
+    return "q4";
+  },
+  // Called from main timer when task is completed
+  addActivity() {
+    const today = new Date().toISOString().split("T")[0];
+    const activity = JSON.parse(localStorage.getItem(this.storageKey) || "{}");
+    activity[today] = (activity[today] || 0) + 1;
+    localStorage.setItem(this.storageKey, JSON.stringify(activity));
+    this.renderCalendar();
+  },
+};
+
 [
   coinTile,
   randomTile,
@@ -854,4 +928,6 @@ const intervalTile = {
   selectorTile,
   intervalTile,
   chronoTile,
+  noteTile,
+  calendarTile,
 ].forEach((tile) => tile.initialize());

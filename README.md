@@ -23,7 +23,7 @@ i built ずつ to practice through time blocks, with the flexibility of pause/re
 
 ## demo
 
-https://github.com/user-attachments/assets/c9693872-eac8-4370-817d-8a5104f6a035
+https://github.com/user-attachments/assets/c9575828-ea72-41be-b859-5b788fe7b23e
 
 [try it now〜](https://zutsu.osc.garden)
 

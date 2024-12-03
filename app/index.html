@@ -38,7 +38,7 @@
         form-action 'self';
         ">
 
-    <link rel="stylesheet" href="styles.css?h=f87182b7">
+    <link rel="stylesheet" href="styles.css?h=4a9ce50a">
 </head>
 
 <body>
@@ -117,7 +117,7 @@
 
                     <div class="controls">
                         <button id="pauseButton">pause</button>
-                        <button id="skipButton" class="secondary">skip task</button>
+                        <button id="doneButton" class="secondary">done</button>
                     </div>
 
                     <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
@@ -153,7 +153,7 @@
                                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
-                        <div class="tile-docs">simple counter. progress is saved in your browser</div>
+                        <div class="popup tile-docs">simple counter. progress is saved in your browser</div>
                     </div>
 
                     <!-- Coin flip -->
@@ -173,7 +173,7 @@
                                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
-                        <div class="tile-docs">flip a fair coin</div>
+                        <div class="popup tile-docs">flip a fair coin</div>
                     </div>
 
                     <!-- Random number -->
@@ -202,7 +202,7 @@
                             <path d="M16 16V16.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
-                        <div class="tile-docs">generate a random number between the minimum and maximum</div>
+                        <div class="popup tile-docs">generate a random number between the minimum and maximum</div>
                     </div>
 
                     <!-- Random choice -->
@@ -220,7 +220,7 @@
                                 d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z"
                                 stroke="currentColor" stroke-width="1.5" />
                         </svg>
-                        <div class="tile-docs">enter comma-separated options to randomly select one of them</div>
+                        <div class="popup tile-docs">enter comma-separated options to randomly select one of them</div>
                     </div>
 
                     <!-- Stopwatch -->
@@ -243,7 +243,7 @@
                             <path d="M10 2H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
                         </svg>
-                        <div class="tile-docs">stopwatch</div>
+                        <div class="popup tile-docs">stopwatch</div>
                     </div>
 
                     <!-- Not Pomodoro -->
@@ -269,7 +269,7 @@
                                 stroke="currentColor" stroke-width="1.5" />
                             <path d="M4 2H20M20 22H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                         </svg>
-                        <div class="tile-docs">alternating timer between work/rest periods. rest timer pauses main task
+                        <div class="popup tile-docs">alternating timer between work/rest periods. rest timer pauses main task
                         </div>
                     </div>
 
@@ -291,7 +291,21 @@
                                 d="M20.7598 14.8785C19.8544 13.8641 19.3112 13.9245 18.7076 14.1056C18.2851 14.166 16.8365 15.8568 16.2329 16.3952C15.2419 17.3743 14.2464 18.3823 14.1807 18.5138C13.9931 18.8188 13.8186 19.3592 13.7341 19.963C13.5771 20.8688 13.3507 21.8885 13.6375 21.9759C13.9242 22.0632 14.7239 21.8954 15.6293 21.7625C16.2329 21.6538 16.6554 21.533 16.9572 21.3519C17.3797 21.0983 18.1644 20.2046 19.5164 18.8761C20.3644 17.9833 21.1823 17.3664 21.4238 16.7626C21.6652 15.8568 21.3031 15.3737 20.7598 14.8785Z"
                                 stroke="currentColor" stroke-width="1.5" />
                         </svg>
-                        <div class="tile-docs">notepad that persist between sessions</div>
+                        <div class="popup tile-docs">notepad that persist between sessions</div>
+                    </div>
+
+                    <!-- Activity calendar -->
+                    <div class="tile">
+                        <div id="calendarGrid" class="calendar-grid">
+                            <!-- JS will populate 30 days here -->
+                        </div>
+                        <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" color="#000000" fill="none">
+                            <path d="M17 2V5M7 2V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M13 3.5H11C7.22876 3.5 5.34315 3.5 4.17157 4.67157C3 5.84315 3 7.72876 3 11.5V14C3 17.7712 3 19.6569 4.17157 20.8284C5.34315 22 7.22876 22 11 22H13C16.7712 22 18.6569 22 19.8284 20.8284C21 19.6569 21 17.7712 21 14V11.5C21 7.72876 21 5.84315 19.8284 4.67157C18.6569 3.5 16.7712 3.5 13 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M3.5 8.5H20.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M9 15.5C9 15.5 10.5 16 11 17.5C11 17.5 13.1765 13.5 16 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="popup tile-docs">shows activity in the last 30 days. the darker the colour, the more tasks completed</div>
                     </div>
                 </div>
             </details>
@@ -356,7 +370,7 @@
             </div>
         </div>
     </div>
-    <script defer src="app.js?h=6221fb54"></script>
+    <script defer src="app.js?h=8f42eab7"></script>
 </body>
 
 </html>
