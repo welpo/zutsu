@@ -34,6 +34,7 @@ function initializeDOM() {
   completedTasksList = document.getElementById("completedTasksList");
   currentTaskContainer = document.getElementById("currentTaskContainer");
   currentTaskName = document.getElementById("currentTaskName");
+  doneButton = document.getElementById("doneButton");
   durationInput = document.getElementById("taskDurationInput");
   exportButton = document.getElementById("exportButton");
   importButton = document.getElementById("importButton");
@@ -41,7 +42,6 @@ function initializeDOM() {
   pauseButton = document.getElementById("pauseButton");
   progressFill = document.getElementById("progressFill");
   resetButton = document.getElementById("resetButton");
-  doneButton = document.getElementById("doneButton");
   startButton = document.getElementById("startSessionButton");
   taskInput = document.getElementById("taskNameInput");
   taskList = document.getElementById("taskList");
@@ -142,7 +142,7 @@ function updateUIStates() {
   exportButton.disabled = noTasks;
   importExportcontrols.style.display = noActiveTask ? "flex" : "none";
   pauseButton.disabled = noActiveTask;
-  resetButton.style.display = hasCompletedTasks ? "inline-flex" : "none";
+  resetButton.style.display = hasCompletedTasks || state.currentTask ? "block" : "none";
   doneButton.disabled = noActiveTask;
   startButton.disabled = noPendingTasks;
   startSessionButton.style.display = noActiveTask ? "block" : "none";
