@@ -142,7 +142,8 @@ function updateUIStates() {
   exportButton.disabled = noTasks;
   importExportcontrols.style.display = noActiveTask ? "flex" : "none";
   pauseButton.disabled = noActiveTask;
-  resetButton.style.display = hasCompletedTasks || state.currentTask ? "block" : "none";
+  resetButton.style.display =
+    hasCompletedTasks || state.currentTask ? "block" : "none";
   doneButton.disabled = noActiveTask;
   startButton.disabled = noPendingTasks;
   startSessionButton.style.display = noActiveTask ? "block" : "none";
@@ -856,20 +857,17 @@ const calendarTile = {
   initialize() {
     this.cleanupOldData();
     this.renderCalendar();
+    this.setupKeyboardNavigation();
   },
   cleanupOldData() {
     const activity = JSON.parse(localStorage.getItem(this.storageKey) || "{}");
     const dates = Object.keys(activity);
-    // If no data or less than 30 days of data, no cleanup needed
     if (dates.length === 0 || dates.length <= 30) return;
-    // Get date 30 days ago
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const cleanedActivity = Object.entries(activity).reduce(
       (acc, [date, count]) => {
-        if (new Date(date) >= thirtyDaysAgo) {
-          acc[date] = count;
-        }
+        if (new Date(date) >= thirtyDaysAgo) acc[date] = count;
         return acc;
       },
       {}
@@ -882,36 +880,86 @@ const calendarTile = {
     const counts = Object.values(activity);
     const maxCount = counts.length ? Math.max(...counts) : 0;
     for (let i = 29; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split("T")[0];
-        const count = activity[dateStr] || 0;
-        // Create container for day and its popup
-        const dayContainer = document.createElement("div");
-        dayContainer.className = "calendar-day-container";
-        // Create day
-        const day = document.createElement("div");
-        const level = this.getIntensityLevel(count, maxCount);
-        day.className = `calendar-day activity-${level}`;
-        // Create popup
-        const popup = document.createElement("div");
-        popup.className = "popup calendar-popup";
-        popup.textContent = `${dateStr}: ${count} tasks`;
-        dayContainer.appendChild(day);
-        dayContainer.appendChild(popup);
-        this.grid.appendChild(dayContainer);
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+      const count = activity[dateStr] || 0;
+      const dayContainer = document.createElement("div");
+      dayContainer.className = "calendar-day-container";
+      const day = document.createElement("div");
+      const level = this.getIntensityLevel(count, maxCount);
+      day.className = `calendar-day activity-${level}`;
+      day.setAttribute("role", "gridcell");
+      day.setAttribute("aria-label", this.formatDateNaturally(dateStr, count));
+      day.setAttribute("tabindex", "-1");
+      const popup = document.createElement("div");
+      popup.className = "popup calendar-popup";
+      popup.textContent = this.formatDateNaturally(dateStr, count);
+      dayContainer.appendChild(day);
+      dayContainer.appendChild(popup);
+      this.grid.appendChild(dayContainer);
     }
-},
+  },
   getIntensityLevel(count, maxCount) {
     if (count === 0) return "empty";
-    // Create quartiles
     const quartile = maxCount / 4;
     if (count <= quartile) return "q1";
     if (count <= quartile * 2) return "q2";
     if (count <= quartile * 3) return "q3";
     return "q4";
   },
-  // Called from main timer when task is completed
+  formatDateNaturally(dateStr, count) {
+    const date = new Date(dateStr);
+    const formatter = new Intl.DateTimeFormat(navigator.language, {
+      month: "long",
+      day: "numeric",
+    });
+    const formattedDate = formatter.format(date);
+    const isToday = dateStr === new Date().toISOString().split("T")[0];
+    const contributionText =
+      count === 0 ? "No tasks" : count === 1 ? "1 task" : `${count} tasks`;
+    return isToday
+      ? `${contributionText} today`
+      : `${contributionText} on ${formattedDate}`;
+  },
+  setupKeyboardNavigation() {
+    let lastFocusedIndex = 0;
+    const days = this.grid.querySelectorAll(".calendar-day");
+    const GRID_WIDTH = 6;
+    days[lastFocusedIndex].setAttribute("tabindex", "0");
+    this.grid.addEventListener("keydown", (e) => {
+      let newIndex = lastFocusedIndex;
+      switch (e.key) {
+        case "ArrowRight":
+          newIndex = Math.min(lastFocusedIndex + 1, days.length - 1);
+          break;
+        case "ArrowLeft":
+          newIndex = Math.max(lastFocusedIndex - 1, 0);
+          break;
+        case "ArrowDown":
+          newIndex = Math.min(lastFocusedIndex + GRID_WIDTH, days.length - 1);
+          break;
+        case "ArrowUp":
+          newIndex = Math.max(lastFocusedIndex - GRID_WIDTH, 0);
+          break;
+        case "Home":
+          newIndex = 0;
+          break;
+        case "End":
+          newIndex = days.length - 1;
+          break;
+        default:
+          return;
+      }
+      if (newIndex !== lastFocusedIndex) {
+        e.preventDefault();
+        days.forEach((day) => day.setAttribute("tabindex", "-1"));
+        days[newIndex].setAttribute("tabindex", "0");
+        days[newIndex].focus();
+        lastFocusedIndex = newIndex;
+      }
+    });
+  },
   addActivity() {
     const today = new Date().toISOString().split("T")[0];
     const activity = JSON.parse(localStorage.getItem(this.storageKey) || "{}");

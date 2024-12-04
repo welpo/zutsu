@@ -828,7 +828,8 @@ summary {
                 background: var(--primary);
             }
 
-            &:hover + .calendar-popup {
+            &:hover + .calendar-popup,
+            &:focus + .calendar-popup {
                 visibility: visible;
                 opacity: 1;
             }
