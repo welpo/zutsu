@@ -11,6 +11,7 @@ const state = {
 const APP_NAME = "ずつ";
 const NOTIFICATION_SOUND = new Audio("tuturu.mp3");
 const DEFAULT_DURATION = 10;
+const UTILS_VISIBILITY_KEY = APP_NAME + "_utils_visible";
 const COMPLETION_MESSAGES = [
   "good job!",
   "well done!",
@@ -47,6 +48,12 @@ function initializeDOM() {
   taskList = document.getElementById("taskList");
   taskPlaceholder = document.getElementById("taskPlaceholder");
   timerDisplay = document.getElementById("timerDisplay");
+  const utilsDetails = document.querySelector("details");
+  const wasUtilsOpen = localStorage.getItem(UTILS_VISIBILITY_KEY) === 'true';
+  utilsDetails.open = wasUtilsOpen;
+  utilsDetails.addEventListener('toggle', () => {
+    localStorage.setItem(UTILS_VISIBILITY_KEY, utilsDetails.open);
+  });
   durationInput.value = DEFAULT_DURATION;
 }
 
