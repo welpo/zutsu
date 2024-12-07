@@ -49,9 +49,9 @@ function initializeDOM() {
   taskPlaceholder = document.getElementById("taskPlaceholder");
   timerDisplay = document.getElementById("timerDisplay");
   const utilsDetails = document.querySelector("details");
-  const wasUtilsOpen = localStorage.getItem(UTILS_VISIBILITY_KEY) === 'true';
+  const wasUtilsOpen = localStorage.getItem(UTILS_VISIBILITY_KEY) === "true";
   utilsDetails.open = wasUtilsOpen;
-  utilsDetails.addEventListener('toggle', () => {
+  utilsDetails.addEventListener("toggle", () => {
     localStorage.setItem(UTILS_VISIBILITY_KEY, utilsDetails.open);
   });
   durationInput.value = DEFAULT_DURATION;
@@ -817,14 +817,21 @@ const intervalTile = {
   switchPhase() {
     this.isWork = !this.isWork;
     this.timeLeft = (this.isWork ? this.workInput : this.restInput).value * 60;
+    const remainingMinutes = Math.ceil(this.timeLeft / 60);
     if (this.isWork) {
       if (this.wasMainTimerActive && state.isPaused) {
         togglePause();
+        showNotification(
+          `time to resume ${state.currentTask.name} (${remainingMinutes} min left)`
+        );
+      } else {
+        showNotification(`time to work for ${remainingMinutes} minutes`);
       }
     } else {
       this.wasMainTimerActive = state.isActive && !state.isPaused;
       if (this.wasMainTimerActive) {
         togglePause();
+        showNotification(`time for a ${remainingMinutes} minute break〜`);
       }
     }
     playAudioNotification();

@@ -134,9 +134,12 @@
                     <div class="tile">
                         <span class="tile-result" id="counterResult">0</span>
                         <div class="tile-controls">
-                            <button class="tile-button icon-button" id="decrementButton" title="decrease count">−</button>
-                            <button class="tile-button icon-button" id="resetCounterButton" title="reset counter">↺</button>
-                            <button class="tile-button icon-button" id="incrementButton" title="increase count">+</button>
+                            <button class="tile-button icon-button" id="decrementButton"
+                                title="decrease count">−</button>
+                            <button class="tile-button icon-button" id="resetCounterButton"
+                                title="reset counter">↺</button>
+                            <button class="tile-button icon-button" id="incrementButton"
+                                title="increase count">+</button>
                         </div>
                         <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
                             height="48" color="#000000" fill="none">
@@ -227,8 +230,10 @@
                     <div class="tile">
                         <span class="tile-result" id="chronoResult">00:00</span>
                         <div class="tile-controls">
-                            <button class="tile-button icon-button" id="chronoStartButton" title="start/pause stopwatch">▶</button>
-                            <button class="tile-button icon-button" id="chronoResetButton" title="reset stopwatch">↺</button>
+                            <button class="tile-button icon-button" id="chronoStartButton"
+                                title="start/pause stopwatch">▶</button>
+                            <button class="tile-button icon-button" id="chronoResetButton"
+                                title="reset stopwatch">↺</button>
                         </div>
                         <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
                             height="48" color="#000000" fill="none">
@@ -269,7 +274,8 @@
                                 stroke="currentColor" stroke-width="1.5" />
                             <path d="M4 2H20M20 22H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                         </svg>
-                        <div class="popup tile-docs">alternating timer between work/rest periods. rest timer pauses main task
+                        <div class="popup tile-docs">alternating timer between work/rest periods. rest timer pauses main
+                            task
                         </div>
                     </div>
 
@@ -299,13 +305,21 @@
                         <div id="calendarGrid" class="calendar-grid">
                             <!-- JS will populate 30 days here -->
                         </div>
-                        <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" color="#000000" fill="none">
-                            <path d="M17 2V5M7 2V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M13 3.5H11C7.22876 3.5 5.34315 3.5 4.17157 4.67157C3 5.84315 3 7.72876 3 11.5V14C3 17.7712 3 19.6569 4.17157 20.8284C5.34315 22 7.22876 22 11 22H13C16.7712 22 18.6569 22 19.8284 20.8284C21 19.6569 21 17.7712 21 14V11.5C21 7.72876 21 5.84315 19.8284 4.67157C18.6569 3.5 16.7712 3.5 13 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M3.5 8.5H20.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M9 15.5C9 15.5 10.5 16 11 17.5C11 17.5 13.1765 13.5 16 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg class="tile-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48"
+                            height="48" color="#000000" fill="none">
+                            <path d="M17 2V5M7 2V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M13 3.5H11C7.22876 3.5 5.34315 3.5 4.17157 4.67157C3 5.84315 3 7.72876 3 11.5V14C3 17.7712 3 19.6569 4.17157 20.8284C5.34315 22 7.22876 22 11 22H13C16.7712 22 18.6569 22 19.8284 20.8284C21 19.6569 21 17.7712 21 14V11.5C21 7.72876 21 5.84315 19.8284 4.67157C18.6569 3.5 16.7712 3.5 13 3.5Z"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M3.5 8.5H20.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M9 15.5C9 15.5 10.5 16 11 17.5C11 17.5 13.1765 13.5 16 12.5" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <div class="popup tile-docs">shows activity in the last 30 days. the darker the colour, the more tasks completed</div>
+                        <div class="popup tile-docs">shows activity in the last 30 days. the intensity of the colour
+                            indicates the number of tasks completed</div>
                     </div>
                 </div>
             </details>
@@ -363,13 +377,14 @@
                 <p>all data is stored locally in your browser. export your tasks if you plan to clear browser data!</p>
 
                 <h3>get involved</h3>
-                <p>ずつ is free software. visit <a href="https://github.com/welpo/zutsu">github.com/welpo/zutsu</a> to see
+                <p>ずつ is free software. visit <a href="https://github.com/welpo/zutsu" target="_blank"
+                        rel="noopener noreferrer">>github.com/welpo/zutsu</a> to see
                     the source code, report bugs, suggest
                     features, or contribute〜</p>
             </div>
         </div>
     </div>
-    <script defer src="app.js?h=3678a26b"></script>
+    <script defer src="app.js?h=63e1bac0"></script>
 </body>
 
 </html>
