@@ -830,9 +830,9 @@ const intervalTile = {
     } else {
       this.wasMainTimerActive = state.isActive && !state.isPaused;
       if (this.wasMainTimerActive) {
-        togglePause();
-        showNotification(`time for a ${remainingMinutes} minute break〜`);
+          togglePause();
       }
+      showNotification(`time for a ${remainingMinutes} minute break〜`);
     }
     playAudioNotification();
     this.updateDisplay();
