@@ -789,6 +789,7 @@ const intervalTile = {
       this.timeLeft = this.workInput.value * 60;
       this.isWork = true;
     }
+    this.updateDisplay();
     this.intervalId = setInterval(() => this.tick(), 1000);
     this.startButton.textContent = "⏸︎";
   },
@@ -830,7 +831,7 @@ const intervalTile = {
     } else {
       this.wasMainTimerActive = state.isActive && !state.isPaused;
       if (this.wasMainTimerActive) {
-          togglePause();
+        togglePause();
       }
       showNotification(`time for a ${remainingMinutes} minute break〜`);
     }
