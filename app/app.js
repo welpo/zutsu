@@ -12,6 +12,7 @@ const APP_NAME = "ずつ";
 const NOTIFICATION_SOUND = new Audio("tuturu.mp3");
 const DEFAULT_DURATION = 10;
 const UTILS_VISIBILITY_KEY = APP_NAME + "_utils_visible";
+const PAUSED_CLASS = "paused";
 const COMPLETION_MESSAGES = [
   "good job!",
   "well done!",
@@ -391,7 +392,7 @@ function startTimer() {
 function togglePause() {
   state.isPaused = !state.isPaused;
   pauseButton.textContent = state.isPaused ? "resume" : "pause";
-  timerDisplay.classList.toggle("paused", state.isPaused);
+  timerDisplay.classList.toggle(PAUSED_CLASS, state.isPaused);
 }
 
 function nextTask() {
@@ -512,6 +513,7 @@ function resetTimerState() {
   state.currentTask = null;
   state.isPaused = false;
   state.timeRemaining = 0;
+  timerDisplay.classList.remove(PAUSED_CLASS);
   timerDisplay.textContent = "00:00";
   pauseButton.textContent = "pause";
   progressFill.style.width = "0%";
