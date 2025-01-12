@@ -894,6 +894,12 @@ summary {
         padding: 0;
     }
 
+    .calendar-popup {
+        top: 0;
+        left: 0;
+        transform: translateX(-80%) translateY(-100%);
+    }
+
     .panel {
         border-radius: var(--radius-md);
         padding: var(--spacing-md);
