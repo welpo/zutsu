@@ -112,8 +112,8 @@ function renderTasks() {
         <span class="drag-handle" aria-hidden="true">⋮</span>
         <span class="task-name">${task.name}</span>
         <div class="task-actions">
-          <span class="task-duration">${task.duration} min</span>
-          <button class="delete-button" title="delete task">×</button>
+          <span class="task-duration editable-duration" data-index="${index}" title="click to edit duration">${task.duration} min</span>
+          <button class="icon-action-button delete-button" title="delete task">×</button>
         </div>
       `;
 
@@ -126,7 +126,48 @@ function renderTasks() {
       updateUIStates();
     });
 
+    const durationSpan = li.querySelector(".task-duration");
+    durationSpan.addEventListener("click", (e) => {
+      e.stopPropagation();
+      startEditingDuration(li, index);
+    });
+
     taskList.appendChild(li);
+  });
+}
+
+function startEditingDuration(taskElement, taskIndex) {
+  const task = state.tasks[taskIndex];
+  const durationSpan = taskElement.querySelector(".task-duration");
+  const currentDuration = task.duration;
+  const durationContainer = durationSpan.parentNode;
+  durationSpan.style.display = "none";
+  const inputField = document.createElement("input");
+  inputField.type = "number";
+  inputField.min = "1";
+  inputField.value = currentDuration;
+  inputField.className = "edit-duration-input";
+  inputField.style.width = "50px";
+  durationContainer.insertBefore(inputField, durationSpan.nextSibling);
+  inputField.focus();
+  inputField.select();
+
+  const saveChanges = () => {
+    const newDuration = parseInt(inputField.value);
+    if (newDuration && newDuration > 0) {
+      task.duration = newDuration;
+      durationSpan.textContent = `${newDuration} min`;
+      saveTasks();
+    }
+    durationContainer.removeChild(inputField);
+    durationSpan.style.display = "";
+  };
+
+  inputField.addEventListener("blur", saveChanges);
+  inputField.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      saveChanges();
+    }
   });
 }
 

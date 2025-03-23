@@ -228,13 +228,12 @@ input[type="number"].task-duration-input {
     color: var(--surface);
 }
 
-.delete-button {
+.icon-action-button {
     display: inline-flex;
     justify-content: center;
     align-items: center;
     transition: color 0.2s ease;
     cursor: pointer;
-    margin-left: var(--spacing-sm);
     border: none;
     background: none;
     padding: 0;
@@ -244,10 +243,42 @@ input[type="number"].task-duration-input {
     font-size: 1.2rem;
 }
 
-.delete-button:hover {
+.icon-action-button:hover {
     transform: none;
     background: none;
+}
+
+.delete-button {
+    margin-left: var(--spacing-sm);
+}
+
+.delete-button:hover {
     color: var(--red);
+}
+
+.editable-duration {
+    position: relative;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.editable-duration:hover {
+    color: var(--accent-color);
+}
+
+.editable-duration:hover::after {
+    position: absolute;
+    top: -0.1em;
+    left: -1.2em;
+    opacity: 0.8;
+    content: "✎";
+}
+
+.edit-duration-input {
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: 1em;
 }
 
 .drag-handle {
