@@ -483,6 +483,9 @@ function updateProgress() {
 function updateUI() {
   if (state.currentTask) {
     currentTaskName.textContent = state.currentTask.name;
+    document.title = `${state.currentTask.name} • ずつ`;
+  } else {
+    document.title = "ずつ • plan your time!";
   }
   renderTasks();
   updateUIStates();
@@ -534,6 +537,7 @@ function endSession() {
   const message =
     COMPLETION_MESSAGES[Math.floor(Math.random() * COMPLETION_MESSAGES.length)];
   currentTaskName.innerHTML = message; // Using innerHTML to support ruby tags
+  document.title = "ずつ • complete!";
   showNotification(message.replace(/<[^>]*>/g, "")); // Strip HTML tags for notification
   saveTasks();
 }
