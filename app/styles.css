@@ -639,7 +639,7 @@ summary {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
     gap: var(--spacing-md);
     width: 100%;
-    overflow-x: hidden;
+    overflow: visible;
 }
 
 .tile {
@@ -921,6 +921,10 @@ summary {
 
 /* Mobile Adjustments */
 @media (max-width: 800px) {
+    .tiles-container {
+        overflow-x: hidden;
+      }
+
     .container {
         padding: 0;
     }
