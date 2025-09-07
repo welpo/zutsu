@@ -303,6 +303,17 @@ input[type="number"].task-duration-input {
     margin-right: var(--spacing-sm);
 }
 
+.task-name.editable {
+    cursor: text;
+    transition: text-decoration 0.2s ease;
+}
+
+.task-name.editable:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--primary);
+    text-underline-offset: 2px;
+}
+
 .task-duration {
     color: var(--text-light);
 }

@@ -110,7 +110,7 @@ function renderTasks() {
     li.draggable = true;
     li.innerHTML = `
         <span class="drag-handle" aria-hidden="true">⋮</span>
-        <span class="task-name">${task.name}</span>
+        <span class="task-name editable" data-index="${index}" title="click to edit task name">${task.name}</span>
         <div class="task-actions">
           <span class="task-duration editable-duration" data-index="${index}" title="click to edit duration">${task.duration} min</span>
           <button class="icon-action-button delete-button" title="delete task">×</button>
@@ -130,6 +130,12 @@ function renderTasks() {
     durationSpan.addEventListener("click", (e) => {
       e.stopPropagation();
       startEditingDuration(li, index);
+    });
+
+    const taskNameSpan = li.querySelector(".task-name");
+    taskNameSpan.addEventListener("click", (e) => {
+      e.stopPropagation();
+      startEditingTaskName(li, index);
     });
 
     taskList.appendChild(li);
@@ -167,6 +173,55 @@ function startEditingDuration(taskElement, taskIndex) {
   inputField.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       saveChanges();
+    }
+  });
+}
+
+function startEditingTaskName(taskElement, taskIndex) {
+  const task = state.tasks[taskIndex];
+  const taskNameSpan = taskElement.querySelector(".task-name");
+  const currentName = task.name;
+  const taskNameContainer = taskNameSpan.parentNode;
+  taskNameSpan.style.display = "none";
+  const inputField = document.createElement("input");
+  inputField.type = "text";
+  inputField.value = currentName;
+  inputField.className = "edit-task-name-input";
+  inputField.style.flex = "1";
+  inputField.style.marginRight = "var(--spacing-sm)";
+  inputField.style.border = "1px solid var(--border)";
+  inputField.style.borderRadius = "var(--radius-md)";
+  inputField.style.background = "var(--background)";
+  inputField.style.padding = "var(--spacing-xs)";
+  inputField.style.color = "var(--text)";
+  inputField.style.fontSize = "1rem";
+  taskNameContainer.insertBefore(inputField, taskNameSpan.nextSibling);
+  inputField.focus();
+  inputField.select();
+
+  const saveChanges = () => {
+    const newName = inputField.value.trim();
+    if (newName && newName !== currentName) {
+      task.name = newName;
+      taskNameSpan.textContent = newName;
+      saveTasks();
+    }
+    taskNameContainer.removeChild(inputField);
+    taskNameSpan.style.display = "";
+  };
+  const cancelChanges = () => {
+    taskNameContainer.removeChild(inputField);
+    taskNameSpan.style.display = "";
+  };
+  inputField.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+  inputField.addEventListener("blur", saveChanges);
+  inputField.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      saveChanges();
+    } else if (e.key === "Escape") {
+      cancelChanges();
     }
   });
 }
