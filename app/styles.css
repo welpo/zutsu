@@ -304,8 +304,8 @@ input[type="number"].task-duration-input {
 }
 
 .task-name.editable {
-    cursor: text;
     transition: text-decoration 0.2s ease;
+    cursor: text;
 }
 
 .task-name.editable:hover {
@@ -447,6 +447,13 @@ button[disabled]:hover::before {
     align-items: center;
     padding: var(--spacing-xs) var(--spacing-sm);
     min-width: fit-content;
+    font-size: 0.9rem;
+}
+
+.total-time {
+    margin-left: auto;
+    color: var(--text-light);
+    font-weight: 400;
     font-size: 0.9rem;
 }
 

@@ -49,6 +49,7 @@ function initializeDOM() {
   taskList = document.getElementById("taskList");
   taskPlaceholder = document.getElementById("taskPlaceholder");
   timerDisplay = document.getElementById("timerDisplay");
+  totalTimeDisplay = document.getElementById("totalTimeDisplay");
   const utilsDetails = document.querySelector("details");
   const wasUtilsOpen = localStorage.getItem(UTILS_VISIBILITY_KEY) === "true";
   utilsDetails.open = wasUtilsOpen;
@@ -140,6 +141,7 @@ function renderTasks() {
 
     taskList.appendChild(li);
   });
+  updateTotalTimeDisplay();
 }
 
 function startEditingDuration(taskElement, taskIndex) {
@@ -164,6 +166,7 @@ function startEditingDuration(taskElement, taskIndex) {
       task.duration = newDuration;
       durationSpan.textContent = `${newDuration} min`;
       saveTasks();
+      updateTotalTimeDisplay();
     }
     durationContainer.removeChild(inputField);
     durationSpan.style.display = "";
@@ -284,6 +287,7 @@ function initializeDragAndDrop() {
   document.addEventListener("dragend", () => {
     updateTasksFromDOM();
     saveTasks();
+    updateTotalTimeDisplay();
   });
 }
 
@@ -382,6 +386,7 @@ function initializeTouchDragAndDrop() {
     touchedItem = null;
     updateTasksFromDOM();
     saveTasks();
+    updateTotalTimeDisplay();
   });
 }
 
@@ -637,6 +642,29 @@ function showNotification(message) {
       body: message,
       icon: "/favicon.ico",
     });
+  }
+}
+
+function updateTotalTimeDisplay() {
+  const totalTime = calculateTotalRemainingTime();
+  totalTimeDisplay.textContent = totalTime === "0 min" ? "no tasks" : `${totalTime} remaining`;
+}
+
+function calculateTotalRemainingTime() {
+  const totalMinutes = state.tasks.reduce((total, task) => total + task.duration, 0);
+  return formatDuration(totalMinutes);
+}
+
+function formatDuration(totalMinutes) {
+  if (totalMinutes === 0) return "0 min";
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) {
+    return `${minutes} min`;
+  } else if (minutes === 0) {
+    return `${hours}h`;
+  } else {
+    return `${hours}h ${minutes}min`;
   }
 }
 
