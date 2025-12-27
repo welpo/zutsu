@@ -287,7 +287,7 @@ function initializeDragAndDrop() {
   document.addEventListener("dragend", () => {
     updateTasksFromDOM();
     saveTasks();
-    updateTotalTimeDisplay();
+    renderTasks();
   });
 }
 
@@ -386,7 +386,7 @@ function initializeTouchDragAndDrop() {
     touchedItem = null;
     updateTasksFromDOM();
     saveTasks();
-    updateTotalTimeDisplay();
+    renderTasks();
   });
 }
 
