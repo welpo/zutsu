@@ -67,6 +67,10 @@ for file in "${all_changed_files[@]}"; do
         error_exit "index.html has unstaged changes. Commit or stash them before proceeding."
     fi
 
+    if has_unstaged_changes "app/sw.js"; then
+        error_exit "sw.js has unstaged changes. Commit or stash them before proceeding."
+    fi
+
     # Update cache busting ?urls in index.html.
     file_without_prefix=${file#app/}
     if [[ " ${APP_FILES_TO_CACHEBUST[*]} " =~ ${file_without_prefix} ]]; then
@@ -75,5 +79,12 @@ for file in "${all_changed_files[@]}"; do
         perl -pi -e "s|${base_name}?[^\"]*\"|${base_name}?h=${new_hash}\"|g; s|${base_name}\"|${base_name}?h=${new_hash}\"|g" "app/index.html"
         git add "app/index.html"
         echo "Updated cache bust hash for $file to $new_hash"
+
+        # Update service worker cache list with versioned URLs.
+        if [[ "$base_name" == "app.js" || "$base_name" == "styles.css" ]]; then
+            perl -pi -e "s|\"/${base_name}(?:\\?[^\"]*)?\"|\"/\\${base_name}?h=${new_hash}\"|g" "app/sw.js"
+            git add "app/sw.js"
+            echo "Updated sw.js cache for $base_name with hash $new_hash"
+        fi
     fi
 done

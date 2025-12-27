@@ -1,6 +1,13 @@
 {
   "name": "ずつ",
   "short_name": "ずつ",
+  "description": "One task at a time - flexible session planner",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#576F46",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -14,8 +21,5 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "theme_color": "#576F46",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }
